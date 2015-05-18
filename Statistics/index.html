@@ -1,0 +1,47 @@
+<!--  
+ * All rights Reserved, Designed By Chengke Sun   
+ * @Description: 数字统计，一个小的Polymer应用在nwjs的演示
+ * @author: Chengke Sun
+ * @email: mydansun@gmail.com
+ * @date: 2015-05-17 00:37:16
+ * @version V1.0     
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- 首先需要引用webcomponents -->
+		<script src="bower_components/webcomponentsjs/webcomponents.min.js">
+		</script>
+		<!-- 引用全局css -->
+		<link href='assets/css/app.css' rel='stylesheet' type='text/css'>
+
+		<!-- 导入资源 -->
+		<link rel="import" href="bower_components/font-roboto/roboto.html">
+
+		<!-- 导入元素 -->
+		<link rel="import" href="elements/page-body.html">
+		<title>
+			Statistics | Polymer demo in nwjs
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	</head>
+	<body>
+		<!-- 引用page-body元素 -->
+		<page-body></page-body>
+		<script>
+			var gui = require('nw.gui');	//获取nw对象
+			var Window = gui.Window.get();	//获取window对象
+			
+			/**
+			 * 解决去除标准窗体后双击最大化的问题，有闪烁BUG待解决
+			 * @param  {[type]} event) {					Window.unmaximize();				} [description]
+			 * @return {[type]}        [description]
+			 */
+			Window.on('maximize',
+				function(event) {
+					Window.unmaximize();	//取消最大化
+				}
+			);
+		</script>
+	</body>
+</html>

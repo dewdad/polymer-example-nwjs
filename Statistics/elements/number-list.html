@@ -1,0 +1,99 @@
+<!--  
+ * @ElementName: number-list
+ * @Description: 数字列表
+ * @author: Chengke Sun
+ * @date: 2015-05-17 00:50:53
+-->
+
+<!-- 导入资源 -->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-shadow/paper-shadow.html">
+<link rel="import" href="../bower_components/core-selector/core-selector.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+
+<!-- 开始polymer元素 -->
+<polymer-element name="number-list">
+	<!-- 开始模板 -->
+	<template>
+		<!-- 元素css -->
+		<style>
+			paper-shadow{
+				overflow-y:scroll;
+				height: 320px;
+				border: 1px solid #DADADA
+			}
+			paper-shadow, paper-item{
+				background-color: #FFF;
+			}
+			paper-item{
+				border-bottom: 1px solid #D3D3D3;
+			}
+			.listbox-error{
+				height: 260px;
+			}
+		</style>
+		<!-- 放置加了特技的paper-item元素用来做数字列表 -->
+		<paper-shadow id="list_box">
+			<core-selector id="core_selector">
+				<!-- 使用template的repeat来进行数据绑定，循环numbers数组来创建paper-item -->
+				<template repeat="{{number in numbers}}">
+					<paper-item>{{number.number}}</paper-item>
+				</template>
+			</core-selector>
+		</paper-shadow>
+	</template>
+	<script>
+		Polymer({
+			/**
+			 * 页面加载完毕方法
+			 * @return {[type]} [description]
+			 */
+			ready: function() {
+				//创建numbers数组
+				this.numbers = [];
+			},
+			/**
+			 * 将新数字插入到numbers数组中
+			 * @param  {[type]} number [description]
+			 * @return {[type]}        [description]
+			 */
+			newNumber: function(number) {
+				//将新数字插入到numbers数组最前
+				this.numbers.splice(0, 0, {
+						"number": number
+					});  
+
+				//下面是插入到最后的，弃用
+				/*this.numbers.push(
+					{
+						"number": number
+					}
+				);*/
+			},
+			clearNumber: function(){
+				this.numbers = [];
+			},
+			/**
+			 * 更改list列表的样式，其实是宽度啦
+			 * @param  {[type]} error [description]
+			 * @return {[type]}       [description]
+			 */
+			changeListHeight: function(error){
+				if(error === true){
+					this.$.list_box.classList.add('listbox-error');	//classList，用来控制class样式的类
+				}else{
+					this.$.list_box.classList.remove('listbox-error');
+				}
+				
+			},
+			/**
+			 * 检查list中数字节点的个数
+			 * @return {[type]} [description]
+			 */
+			checkQuantity: function(){
+				var list = this.$.core_selector.querySelectorAll("paper-item");
+				return (list.length > 0);
+			}
+		});
+	</script>
+</polymer-element>

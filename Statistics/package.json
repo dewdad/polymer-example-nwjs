@@ -1,0 +1,18 @@
+{
+	"main": "index.html",
+	"name": "Statistics",
+	"description": "Statistics, A Polymer demo in nwjs",
+	"version": "1.1",
+	"window": {
+		"toolbar": false,
+		"frame": false,
+		"position": "center",
+		//"position": "mouse",
+		"width": 480,
+		"height": 550,
+		"resizable": false
+	},
+	"webkit": {
+		"plugin": true
+	}
+}

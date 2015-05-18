@@ -1,0 +1,159 @@
+<!--  
+ * @ElementName: page-body
+ * @Description: 应用主体
+ * @author: Chengke Sun
+ * @date: 2015-05-17 00:50:53
+-->
+
+<!-- 导入资源 -->
+<link rel="import" href="../bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/core-pages/core-pages.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-action-dialog.html">
+
+<!-- 导入元素 -->
+<link rel="import" href="number-enter.html">
+<link rel="import" href="number-result.html">
+
+<!-- 开始polymer元素 -->
+<polymer-element name="page-body">
+	<!-- 开始模板 -->
+	<template>
+		<!-- 元素css -->
+		<style>
+			core-header-panel {
+				height: 100%;
+				overflow: auto;
+				-webkit-overflow-scrolling: touch;
+			}
+			core-toolbar {
+				background: #294957;
+				color: white;
+			}
+			#tabs {
+				width: 100%;
+				margin: 0;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+				text-transform: uppercase;
+			}
+			.container {
+				width: 90%;
+				margin: 10px auto;
+			}
+			.app-drag {
+				-webkit-app-region:drag;
+			}
+			.app-title {
+				padding-left: 10px;
+			}
+		</style>
+		<core-toolbar class="medium-tall">
+			<div class="app-drag app-title" flex>
+				Statistics | <small>Polymer demo in nwjs</small>
+			</div>
+			<!-- on-eventname 事件绑定，使用双大括号，比如on-click就是绑定了click事件 -->
+			
+			<!-- 下面是萌萌哒的刷新按钮，仅调试时启用，供没有调试工具栏时刷新窗体内容 -->
+			<!-- <paper-icon-button icon="cached" on-click="{{button_fresh}}">
+			</paper-icon-button> -->
+			
+			<!-- 下面是萌萌哒的关闭按钮 -->
+			<paper-icon-button icon="close" on-click="{{button_close}}">
+			</paper-icon-button>
+			<div class="bottom fit" horizontal layout>
+				<!-- 下面是选项卡 -->
+				<paper-tabs id="tabs" selected="enter" on-core-select="{{tab_select}}" self-end>
+					<paper-tab name="enter">
+						Enter Number
+					</paper-tab>
+					<paper-tab name="result">
+						Result
+					</paper-tab>
+				</paper-tabs>
+			</div>
+		</core-toolbar>
+		<!-- 这里开始正文部分 -->
+		<div class="container" layout center>
+			<core-pages id="pages" selected="enter">
+				<div name="enter">
+					<!-- 引用number-enter元素 -->
+					<number-enter id="number_enter">
+					</number-enter>
+				</div>
+				<div name="result">
+					<!-- 引用number-result元素 -->
+					<number-result id="number_result">
+					</number-result>
+				</div>
+			</core-pages>
+		</div>
+		<!-- 当没有输入数字时，弹出下面窗口 -->
+		<paper-action-dialog id="dialog" backdrop autoCloseDisabled layered="false">
+			<p>
+				Please enter a vaild number at least!
+			</p>
+			<paper-button affirmative autofocus>
+				ok
+			</paper-button>
+		</paper-action-dialog>
+	</template>
+	<script>
+		Polymer({
+			/**
+			 * 页面加载完毕方法
+			 * @return {[type]} [description]
+			 */
+			ready: function() {
+				//...
+			},
+			/**
+			 * 刷新按钮方法
+			 * @return {[type]} [description]
+			 */
+			button_fresh: function(){
+				window.location.reload();
+			},
+			/**
+			 * 关闭按钮方法
+			 * @return {[type]} [description]
+			 */
+			button_close: function(){
+				var gui = require('nw.gui');
+				//获取当前窗口
+				var win = gui.Window.get();
+				//关闭当前窗口
+				win.close();
+			},
+			/**
+			 * tab选择方法
+			 * @return {[type]} [description]
+			 */
+			tab_select: function(){
+				//将根据id获取到的组件填充变量
+				var tabs = this.$.tabs;
+				var pages = this.$.pages;
+				var dialog = this.$.dialog;
+
+				//判断是否选择了result选项卡
+				if (tabs.selected == "result") {
+					//这里调用number_enter的list的checkQuantity方法，用来检查list中是否含有数字元素
+					if(this.$.number_enter.$.list.checkQuantity() === false){	//如果没有
+						dialog.open();	//显示dialog
+						tabs.selected = "enter";	//重定向选项卡
+						return false;	//返回
+					}else{	//如果有
+						//将number_enter的list中所有的paper-item的HTML节点填充list变量
+						var list = this.$.number_enter.$.list.$.core_selector.querySelectorAll("paper-item");
+						//调用number_result的calculate方法，刷新计算结果
+						this.$.number_result.calculate(list);
+					}
+				}
+				//根据选项卡移动页面
+				pages.selected = tabs.selected;
+			}
+		});
+	</script>
+</polymer-element>

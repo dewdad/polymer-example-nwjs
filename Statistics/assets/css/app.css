@@ -1,0 +1,21 @@
+html,body {
+	height:100%;
+	margin: 0px;
+	padding: 0px;
+	background-color: #E5E5E5;
+	font-family: 'RobotoDraft', 'Microsoft YaHei', sans-serif;
+	-webkit-user-select:none;
+}
+body {
+	border: 1px solid #000;
+	overflow:hidden;
+}
+body:after {
+	content: "";
+	position: fixed;
+	background: #000;
+	left: 0;
+	right: 0;
+	height: 1px;
+	bottom: 0px;
+}

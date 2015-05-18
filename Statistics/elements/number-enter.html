@@ -1,0 +1,110 @@
+<!--  
+ * @ElementName: number-enter
+ * @Description: 数字录入
+ * @author: Chengke Sun
+ * @date: 2015-05-17 00:50:53
+-->
+
+<!-- 导入资源 -->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-input/paper-input-decorator.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<!-- 导入元素 -->
+<link rel="import" href="number-list.html">
+
+<!-- 开始polymer元素 -->
+<polymer-element name="number-enter">
+	<!-- 开始模板 -->
+	<template>
+		<!-- 元素css -->
+		<style>
+			paper-input-decorator {
+				width: 100%;
+			}
+			paper-button[raised].red {
+				background-color: #E52F2F;
+				color: #fff;
+			}
+			paper-button[raised].blue {
+				background-color: #4285f4;
+				color: #fff;
+			}
+		</style>
+		<!-- horizontal水平布局 -->
+		<div horizontal layout>
+			<!-- self-star基准高度 -->
+			<div flex three self-start>
+				<!-- 下面是加了特技的文本框 -->
+				<paper-input-decorator label="Please enter a integer." floatingLabel error="Please enter a vaild integer, and it can not be 0 at the beginning!">
+					<!--  
+					 * @pattern: 这里可以写正则验证，这个正则允许输入正负整数，0不能作为开头但是可以只输入0
+					 * @required: 必须输入
+					 * @on-keypress 事件绑定
+					 * @maxlength 最大输入长度
+					-->
+					<input is="core-input" maxlength="10" required pattern="^-?([1-9]{1}\d{0,9}|0)$" id="number" on-keypress="{{inputNumberKeypress}}">
+				</paper-input-decorator>
+			</div>
+			<!-- self-center垂直居中 -->
+			<div flex self-center>
+				<!-- 下面是萌萌哒的按钮，修改了css样式 -->
+				<paper-button raised class="blue" on-click="{{addNumber}}">Add</paper-button>
+			</div>
+			<div flex self-center>
+				<!-- 下面是萌萌哒的按钮，修改了css样式 -->
+				<paper-button raised class="red" on-click="{{clearNumber}}">Clear</paper-button>
+			</div>
+		</div>
+		<!-- 引用number-list元素 -->
+		<number-list id="list"></number-list>
+	</template>
+	<script>
+		Polymer({
+			/**
+			 * 页面加载完毕方法
+			 * @return {[type]} [description]
+			 */
+			ready: function() {
+				//...
+			},
+			/**
+			 * 增加数字方法
+			 */
+			addNumber: function(){
+				var input_number = this.$.number;	//将节点放置变量
+				if(input_number.value == "") return false;	//判断文本框是否为空
+				var vaild = input_number.checkValidity();	//检查文本框输入是否符合要求
+				input_number.parentNode.isInvalid = !vaild;	//赋值父节点的isInvalid来显示错误信息，注意是父节点
+				this.$.list.changeListHeight(!vaild);	//调用list的changeListHeight方法，如果有错误信息则改变数字列表的高度
+				if(!vaild){
+					//如果输入无效，则返回
+					return false;
+				}
+				//调用list的newNumber把新数字放入节点，将数字作为参数
+				this.$.list.newNumber(input_number.value);
+				//重置文本框内容
+				input_number.value = "";
+				//置文本框焦点
+				input_number.focus();
+			},
+			clearNumber: function(){
+				this.$.list.clearNumber();
+			},
+			/**
+			 * 获取键盘输入回车，自动调用addNumber
+			 * @param  {[type]} event  [description]
+			 * @param  {[type]} detail [description]
+			 * @param  {[type]} sender [description]
+			 * @return {[type]}        [description]
+			 */
+			inputNumberKeypress: function(event, detail, sender){
+				//判断keyCode是否为回车
+				if(event.keyCode == 13){
+					//调用addNumber
+					this.addNumber();
+				}
+			}
+		});
+	</script>
+</polymer-element>

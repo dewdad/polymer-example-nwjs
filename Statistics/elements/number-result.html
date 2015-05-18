@@ -1,0 +1,73 @@
+<!--  
+ * @ElementName: number-result
+ * @Description: 数字结果
+ * @author: Chengke Sun
+ * @date: 2015-05-17 00:50:53
+-->
+
+<!-- 导入资源 -->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
+<!-- 开始polymer元素 -->
+<polymer-element name="number-result">
+	<!-- 开始模板 -->
+	<template>
+		<!-- 元素css -->
+		<style>
+			paper-input {
+				width: 100%;
+			}
+			h4{
+				margin-top: 3px;
+				margin-bottom: 3px;
+			}
+			paper-input-decorator{ 
+				padding-top: 3px;
+				padding-bottom: 3px;
+			}
+		</style>
+		<!-- 下面放置一些文本框 -->
+		<h4>Quantity</h4>
+		<paper-input label="Quantity" value="null" id="quantity" disabled></paper-input>
+		<h4>Sum</h4>
+		<paper-input label="Sum" value="null" id="sum" disabled></paper-input>
+		<h4>Average</h4>
+		<paper-input label="Average" value="null" id="average" disabled></paper-input>
+		<h4>Max</h4>
+		<paper-input label="Max" value="null" id="max" disabled></paper-input>
+		<h4>Min</h4>
+		<paper-input label="Min" value="null" id="min" disabled></paper-input>
+	</template>
+	<script>
+		Polymer({
+			/**
+			 * 页面加载完毕方法
+			 * @return {[type]} [description]
+			 */
+			ready: function() {
+				//...
+			},
+			/**
+			 * 计算方法
+			 * @param  {[type]} data [description]
+			 * @return {[type]}      [description]
+			 */
+			calculate: function(data){
+				var sum = 0;
+				var number = [];
+				var quantity = data.length
+				for (var i = 0; i < quantity; i++) {
+					var current = parseInt(data[i].innerHTML);
+					sum += current;
+					number.push(current);
+				};
+				this.$.max.value = Math.max.apply(null,number);
+				this.$.min.value = Math.min.apply(null,number);
+				this.$.average.value = (sum / quantity).toFixed(2);
+				this.$.quantity.value = quantity;
+				this.$.sum.value = sum;
+			}
+		});
+	</script>
+</polymer-element>
